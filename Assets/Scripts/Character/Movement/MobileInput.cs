@@ -1,4 +1,3 @@
-using UI.Joystick;
 using UnityEngine;
 
 namespace Character.Movement
