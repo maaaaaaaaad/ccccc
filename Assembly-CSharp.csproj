@@ -50,6 +50,7 @@
     <Compile Include="Assets/Scripts/Character/Classes/Knight.cs" />
     <Compile Include="Assets/Scripts/Equipment/Base/Equipment.cs" />
     <Compile Include="Assets/Scripts/Core/StatType.cs" />
+    <Compile Include="Assets/Scripts/Character/Classes/Mage.cs" />
     <Compile Include="Assets/Scripts/Core/EquipmentSlot.cs" />
     <Compile Include="Assets/Scripts/Core/EquipmentType.cs" />
     <Compile Include="Assets/Scripts/Main.cs" />
