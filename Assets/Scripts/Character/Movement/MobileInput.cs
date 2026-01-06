@@ -1,3 +1,4 @@
+using UI.Joystick;
 using UnityEngine;
 
 namespace Character.Movement
@@ -9,6 +10,18 @@ namespace Character.Movement
         public Vector2 MoveInput { get; private set; }
         public bool IsMoving => MoveInput.sqrMagnitude > 0.01f;
 
+        private bool _hasJoystick;
+
+        private void Awake()
+        {
+            _hasJoystick = joystick != null;
+
+            if (!_hasJoystick)
+            {
+                Debug.LogWarning("MobileInput: Joystick is not assigned!");
+            }
+        }
+
         private void Update()
         {
             ReadJoystickInput();
@@ -16,7 +29,7 @@ namespace Character.Movement
 
         private void ReadJoystickInput()
         {
-            if (joystick == null)
+            if (!_hasJoystick)
             {
                 MoveInput = Vector2.zero;
                 return;
@@ -36,6 +49,7 @@ namespace Character.Movement
         public void SetJoystick(VariableJoystick newJoystick)
         {
             joystick = newJoystick;
+            _hasJoystick = joystick != null;
         }
     }
 }
