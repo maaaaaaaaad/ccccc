@@ -13,20 +13,22 @@ namespace Character.Movement
         private CharacterController _controller;
         private MobileInput _input;
         private CharacterBase _character;
+        private Animator _animator;
 
         private void Awake()
         {
             _controller = GetComponent<CharacterController>();
             _input = GetComponent<MobileInput>();
             _character = GetComponent<CharacterBase>();
+            _animator = GetComponent<Animator>();
 
-            if (cameraTransform != null)
+            if (cameraTransform)
             {
                 return;
             }
 
             var mainCamera = Camera.main;
-            if (mainCamera == null)
+            if (!mainCamera)
             {
                 return;
             }
@@ -36,12 +38,24 @@ namespace Character.Movement
 
         private void Update()
         {
+            UpdateAnimation();
+
             if (!_input.IsMoving)
             {
                 return;
             }
 
             MoveCharacter();
+        }
+
+        private void UpdateAnimation()
+        {
+            if (!_animator)
+            {
+                return;
+            }
+
+            _animator.SetBool("IsMoving", _input.IsMoving);
         }
 
         private void MoveCharacter()
@@ -62,7 +76,7 @@ namespace Character.Movement
         {
             var inputDirection = _input.MoveInput;
 
-            if (cameraTransform == null)
+            if (!cameraTransform)
             {
                 return new Vector3(inputDirection.x, 0f, inputDirection.y);
             }
