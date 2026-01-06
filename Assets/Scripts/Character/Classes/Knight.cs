@@ -18,7 +18,7 @@ namespace Character.Classes
                 maxMP: 50f,
                 attack: 25f,
                 defense: 15f,
-                moveSpeed: 4f
+                moveSpeed: 2f
             );
 
             CharacterName = "Knight";
