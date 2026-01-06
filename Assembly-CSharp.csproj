@@ -46,12 +46,14 @@
     <Analyzer Include="/Applications/Unity/Hub/Editor/6000.3.2f1/Unity.app/Contents/Resources/BuildPipeline/Unity.SourceGenerators/Unity.UIToolkit.SourceGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets/Scripts/Core/CharacterClass.cs" />
     <Compile Include="Assets/Scripts/Equipment/Base/Equipment.cs" />
     <Compile Include="Assets/Scripts/Core/StatType.cs" />
     <Compile Include="Assets/Scripts/Core/EquipmentSlot.cs" />
     <Compile Include="Assets/Scripts/Core/EquipmentType.cs" />
     <Compile Include="Assets/Scripts/Main.cs" />
     <Compile Include="Assets/Scripts/Stats/CharacterStats.cs" />
+    <Compile Include="Assets/Scripts/Character/Base/CharacterBase.cs" />
     <Reference Include="UnityEngine">
       <HintPath>/Applications/Unity/Hub/Editor/6000.3.2f1/Unity.app/Contents/Resources/Scripting/Managed/UnityEngine/UnityEngine.dll</HintPath>
     </Reference>
