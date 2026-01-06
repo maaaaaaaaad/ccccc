@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 178481967417768860}
   - component: {fileID: 1532194393840802503}
   - component: {fileID: 4166497022873329930}
+  - component: {fileID: 3879028052376018779}
   m_Layer: 0
   m_Name: Knight
   m_TagString: Untagged
@@ -99,6 +100,28 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Character.Movement.CharacterMovement
   cameraTransform: {fileID: 0}
+--- !u!95 &3879028052376018779
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5095995662866966548}
+  m_Enabled: 1
+  m_Avatar: {fileID: 9000000, guid: a43f5e14edabf4827b59e57de726b003, type: 3}
+  m_Controller: {fileID: 9100000, guid: 1dea194cf364d4d56884e807258659bf, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1001 &991090144634552351
 PrefabInstance:
   m_ObjectHideFlags: 0
