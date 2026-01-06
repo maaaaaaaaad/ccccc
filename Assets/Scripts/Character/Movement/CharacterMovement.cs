@@ -55,21 +55,52 @@ namespace Character.Movement
                 return;
             }
 
-            _animator.SetBool("IsMoving", _input.IsMoving);
+            var moveSpeed = _input.IsMoving ? _character.GetStat(StatType.MoveSpeed) : 0f;
+            _animator.SetFloat("Speed", moveSpeed);
         }
 
         private void MoveCharacter()
         {
             var moveSpeed = _character.GetStat(StatType.MoveSpeed);
+            var actualSpeed = GetActualMoveSpeed(moveSpeed);
             var moveDirection = GetMoveDirection();
 
-            var velocity = moveDirection * moveSpeed;
+            var velocity = moveDirection * actualSpeed;
             _controller.Move(velocity * Time.deltaTime);
 
             if (moveDirection != Vector3.zero)
             {
                 RotateCharacter(moveDirection);
             }
+        }
+
+        private float GetActualMoveSpeed(float desiredSpeed)
+        {
+            if (!_animator)
+            {
+                return desiredSpeed;
+            }
+
+            var currentState = _animator.GetCurrentAnimatorStateInfo(0);
+            var isInWalkState = IsWalkState(currentState);
+
+            if (isInWalkState && desiredSpeed > 2.5f)
+            {
+                return 2.5f;
+            }
+
+            return desiredSpeed;
+        }
+
+        private bool IsWalkState(UnityEngine.AnimatorStateInfo stateInfo)
+        {
+            var stateHash = stateInfo.shortNameHash;
+            return _animator.HasState(0, stateHash) &&
+                   (stateInfo.IsName("Walking") ||
+                    stateInfo.IsName("Walk") ||
+                    stateInfo.IsName("Meshy_AI_Animation_Knight_Walking_withSkin") ||
+                    stateInfo.IsName("Meshy_AI_Animation_Mage_Walking_withSkin") ||
+                    stateInfo.IsName("Meshy_AI_Animation_Archer_Walking_withSkin"));
         }
 
         private Vector3 GetMoveDirection()
