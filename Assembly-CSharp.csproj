@@ -50,11 +50,14 @@
     <Compile Include="Assets/Scripts/Character/Classes/Knight.cs" />
     <Compile Include="Assets/Scripts/Equipment/Base/Equipment.cs" />
     <Compile Include="Assets/Scripts/Core/StatType.cs" />
+    <Compile Include="Assets/Scripts/Character/Classes/Archer.cs" />
     <Compile Include="Assets/Scripts/Character/Classes/Mage.cs" />
     <Compile Include="Assets/Scripts/Core/EquipmentSlot.cs" />
+    <Compile Include="Assets/Scripts/Character/Movement/MobileInput.cs" />
     <Compile Include="Assets/Scripts/Core/EquipmentType.cs" />
     <Compile Include="Assets/Scripts/Main.cs" />
     <Compile Include="Assets/Scripts/Stats/CharacterStats.cs" />
+    <Compile Include="Assets/UI/Joystick/VariableJoystick.cs" />
     <Compile Include="Assets/Scripts/Character/Base/CharacterBase.cs" />
     <Reference Include="UnityEngine">
       <HintPath>/Applications/Unity/Hub/Editor/6000.3.2f1/Unity.app/Contents/Resources/Scripting/Managed/UnityEngine/UnityEngine.dll</HintPath>
