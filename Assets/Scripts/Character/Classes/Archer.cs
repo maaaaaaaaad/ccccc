@@ -14,11 +14,11 @@ namespace Character.Classes
         protected override void InitializeStats()
         {
             Stats.SetDefaultStats(
-                maxHP: 100f,
-                maxMP: 80f,
-                attack: 28f,
-                defense: 10f,
-                moveSpeed: 2f
+                100f,
+                80f,
+                28f,
+                10f,
+                2f
             );
 
             CharacterName = "Archer";
@@ -26,17 +26,12 @@ namespace Character.Classes
 
         protected override bool CanEquip(Equipment.Base.Equipment equipment)
         {
-            if (equipment == null)
-            {
-                return false;
-            }
+            if (equipment == null) return false;
 
             if ((equipment.EquipmentSlot, equipment.EquipmentType) is
                 (EquipmentSlot.Weapon1, not EquipmentType.Bow) or
                 (EquipmentSlot.Weapon2, not EquipmentType.Quiver))
-            {
                 return false;
-            }
 
             return equipment.EquipmentType switch
             {

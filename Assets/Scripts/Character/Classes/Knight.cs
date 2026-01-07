@@ -14,11 +14,11 @@ namespace Character.Classes
         protected override void InitializeStats()
         {
             Stats.SetDefaultStats(
-                maxHP: 150f,
-                maxMP: 50f,
-                attack: 25f,
-                defense: 15f,
-                moveSpeed: 2f
+                150f,
+                50f,
+                25f,
+                15f,
+                2f
             );
 
             CharacterName = "Knight";
@@ -26,10 +26,7 @@ namespace Character.Classes
 
         protected override bool CanEquip(Equipment.Base.Equipment equipment)
         {
-            if (equipment == null)
-            {
-                return false;
-            }
+            if (equipment == null) return false;
 
             return equipment.EquipmentType switch
             {
@@ -53,10 +50,7 @@ namespace Character.Classes
             var weapon1 = GetEquippedItem(EquipmentSlot.Weapon1);
             var weapon2 = GetEquippedItem(EquipmentSlot.Weapon2);
 
-            if (weapon1 == null || weapon2 == null)
-            {
-                return false;
-            }
+            if (weapon1 == null || weapon2 == null) return false;
 
             return weapon1.EquipmentType == EquipmentType.Sword &&
                    weapon2.EquipmentType == EquipmentType.Sword;
@@ -66,10 +60,7 @@ namespace Character.Classes
         {
             var baseAttack = Stats.GetStat(StatType.Attack);
 
-            if (!IsDualWielding())
-            {
-                return baseAttack;
-            }
+            if (!IsDualWielding()) return baseAttack;
 
             return baseAttack * 1.5f;
         }

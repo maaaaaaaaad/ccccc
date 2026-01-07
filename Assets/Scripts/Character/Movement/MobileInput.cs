@@ -6,19 +6,16 @@ namespace Character.Movement
     {
         [SerializeField] private VariableJoystick joystick;
 
+        private bool _hasJoystick;
+
         public Vector2 MoveInput { get; private set; }
         public bool IsMoving => MoveInput.sqrMagnitude > 0.01f;
-
-        private bool _hasJoystick;
 
         private void Awake()
         {
             _hasJoystick = joystick != null;
 
-            if (!_hasJoystick)
-            {
-                Debug.LogWarning("MobileInput: Joystick is not assigned!");
-            }
+            if (!_hasJoystick) Debug.LogWarning("MobileInput: Joystick is not assigned!");
         }
 
         private void Update()
@@ -39,10 +36,7 @@ namespace Character.Movement
 
             MoveInput = new Vector2(horizontal, vertical);
 
-            if (MoveInput.sqrMagnitude > 1f)
-            {
-                MoveInput.Normalize();
-            }
+            if (MoveInput.sqrMagnitude > 1f) MoveInput.Normalize();
         }
 
         public void SetJoystick(VariableJoystick newJoystick)

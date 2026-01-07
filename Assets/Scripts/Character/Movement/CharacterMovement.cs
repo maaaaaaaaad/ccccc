@@ -9,11 +9,11 @@ namespace Character.Movement
     public class CharacterMovement : MonoBehaviour
     {
         [SerializeField] private Transform cameraTransform;
+        private Animator _animator;
+        private CharacterBase _character;
 
         private CharacterController _controller;
         private MobileInput _input;
-        private CharacterBase _character;
-        private Animator _animator;
 
         private void Awake()
         {
@@ -22,16 +22,10 @@ namespace Character.Movement
             _character = GetComponent<CharacterBase>();
             _animator = GetComponent<Animator>();
 
-            if (cameraTransform)
-            {
-                return;
-            }
+            if (cameraTransform) return;
 
             var mainCamera = Camera.main;
-            if (!mainCamera)
-            {
-                return;
-            }
+            if (!mainCamera) return;
 
             cameraTransform = mainCamera.transform;
         }
@@ -40,20 +34,14 @@ namespace Character.Movement
         {
             UpdateAnimation();
 
-            if (!_input.IsMoving)
-            {
-                return;
-            }
+            if (!_input.IsMoving) return;
 
             MoveCharacter();
         }
 
         private void UpdateAnimation()
         {
-            if (!_animator)
-            {
-                return;
-            }
+            if (!_animator) return;
 
             var moveSpeed = _input.IsMoving ? _character.GetStat(StatType.MoveSpeed) : 0f;
             _animator.SetFloat("Speed", moveSpeed);
@@ -68,31 +56,22 @@ namespace Character.Movement
             var velocity = moveDirection * actualSpeed;
             _controller.Move(velocity * Time.deltaTime);
 
-            if (moveDirection != Vector3.zero)
-            {
-                RotateCharacter(moveDirection);
-            }
+            if (moveDirection != Vector3.zero) RotateCharacter(moveDirection);
         }
 
         private float GetActualMoveSpeed(float desiredSpeed)
         {
-            if (!_animator)
-            {
-                return desiredSpeed;
-            }
+            if (!_animator) return desiredSpeed;
 
             var currentState = _animator.GetCurrentAnimatorStateInfo(0);
             var isInWalkState = IsWalkState(currentState);
 
-            if (isInWalkState && desiredSpeed > 2.5f)
-            {
-                return 2.5f;
-            }
+            if (isInWalkState && desiredSpeed > 2.5f) return 2.5f;
 
             return desiredSpeed;
         }
 
-        private bool IsWalkState(UnityEngine.AnimatorStateInfo stateInfo)
+        private bool IsWalkState(AnimatorStateInfo stateInfo)
         {
             var stateHash = stateInfo.shortNameHash;
             return _animator.HasState(0, stateHash) &&
@@ -107,10 +86,7 @@ namespace Character.Movement
         {
             var inputDirection = _input.MoveInput;
 
-            if (!cameraTransform)
-            {
-                return new Vector3(inputDirection.x, 0f, inputDirection.y);
-            }
+            if (!cameraTransform) return new Vector3(inputDirection.x, 0f, inputDirection.y);
 
             var cameraForward = cameraTransform.forward;
             var cameraRight = cameraTransform.right;
@@ -121,7 +97,7 @@ namespace Character.Movement
             cameraForward.Normalize();
             cameraRight.Normalize();
 
-            var moveDirection = (cameraForward * inputDirection.y) + (cameraRight * inputDirection.x);
+            var moveDirection = cameraForward * inputDirection.y + cameraRight * inputDirection.x;
             return moveDirection;
         }
 

@@ -7,9 +7,10 @@ namespace Stats
 {
     public class CharacterStats
     {
-        private readonly Dictionary<StatType, float> _stats;
         private readonly Dictionary<StatType, float> _baseStats;
         private readonly Dictionary<StatType, float> _equipmentBonuses;
+
+        private readonly Dictionary<StatType, float> _stats;
 
         public CharacterStats()
         {
@@ -19,6 +20,8 @@ namespace Stats
 
             InitializeStats();
         }
+
+        public event Action<StatType, float, float> OnStatChanged;
 
         public float GetStat(StatType type)
         {
@@ -39,20 +42,25 @@ namespace Stats
 
         public void ModifyCurrentStat(StatType type, float amount)
         {
-            if (!_stats.ContainsKey(type))
-            {
-                return;
-            }
+            if (!_stats.ContainsKey(type)) return;
 
-            _stats[type] = Mathf.Clamp(_stats[type] + amount, 0f, GetMaxValue(type));
+            var oldValue = _stats[type];
+            var newValue = Mathf.Clamp(_stats[type] + amount, 0f, GetMaxValue(type));
+            _stats[type] = newValue;
+
+            if (Math.Abs(oldValue - newValue) > 0.001f) OnStatChanged?.Invoke(type, oldValue, newValue);
         }
 
         private void RecalculateStat(StatType type)
         {
             var baseValue = _baseStats.GetValueOrDefault(type, 0f);
             var bonusValue = _equipmentBonuses.GetValueOrDefault(type, 0f);
+            var oldValue = _stats.GetValueOrDefault(type, 0f);
+            var newValue = baseValue + bonusValue;
 
-            _stats[type] = baseValue + bonusValue;
+            _stats[type] = newValue;
+
+            if (Math.Abs(oldValue - newValue) > 0.001f) OnStatChanged?.Invoke(type, oldValue, newValue);
         }
 
         private float GetMaxValue(StatType type)

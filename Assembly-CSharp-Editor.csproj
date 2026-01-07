@@ -48,6 +48,7 @@
   <ItemGroup>
     <Compile Include="Assets/UI/Joystick/Scripts/Editor/DynamicJoystickEditor.cs" />
     <Compile Include="Assets/UI/Joystick/Scripts/Editor/VariableJoystickEditor.cs" />
+    <Compile Include="Assets/Editor/FontAssetGenerator.cs" />
     <Compile Include="Assets/UI/Joystick/Scripts/Editor/FloatingJoystickEditor.cs" />
     <Compile Include="Assets/UI/Joystick/Scripts/Editor/JoystickEditor.cs" />
     <Reference Include="UnityEngine">

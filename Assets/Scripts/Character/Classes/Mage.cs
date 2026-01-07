@@ -14,11 +14,11 @@ namespace Character.Classes
         protected override void InitializeStats()
         {
             Stats.SetDefaultStats(
-                maxHP: 80f,
-                maxMP: 200f,
-                attack: 30f,
-                defense: 8f,
-                moveSpeed: 2f
+                80f,
+                200f,
+                30f,
+                8f,
+                2f
             );
 
             CharacterName = "Mage";
@@ -26,17 +26,12 @@ namespace Character.Classes
 
         protected override bool CanEquip(Equipment.Base.Equipment equipment)
         {
-            if (equipment == null)
-            {
-                return false;
-            }
+            if (equipment == null) return false;
 
             if ((equipment.EquipmentSlot, equipment.EquipmentType) is
                 (EquipmentSlot.Weapon1, not EquipmentType.Staff) or
                 (EquipmentSlot.Weapon2, not EquipmentType.Shield))
-            {
                 return false;
-            }
 
             return equipment.EquipmentType switch
             {

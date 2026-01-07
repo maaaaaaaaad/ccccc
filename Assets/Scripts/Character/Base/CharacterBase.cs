@@ -1,6 +1,6 @@
+using System;
 using System.Collections.Generic;
 using Core;
-using Equipment.Base;
 using Stats;
 using UnityEngine;
 
@@ -8,11 +8,10 @@ namespace Character.Base
 {
     public abstract class CharacterBase : MonoBehaviour
     {
+        private readonly Dictionary<EquipmentSlot, Equipment.Base.Equipment> _equippedItems = new();
         public string CharacterName { get; protected set; }
         public CharacterClass CharacterClass { get; protected set; }
         public CharacterStats Stats { get; private set; }
-
-        private readonly Dictionary<EquipmentSlot, Equipment.Base.Equipment> _equippedItems = new();
 
         protected virtual void Awake()
         {
@@ -24,15 +23,9 @@ namespace Character.Base
 
         public bool EquipItem(Equipment.Base.Equipment equipment)
         {
-            if (!CanEquip(equipment))
-            {
-                return false;
-            }
+            if (!CanEquip(equipment)) return false;
 
-            if (_equippedItems.ContainsKey(equipment.EquipmentSlot))
-            {
-                UnequipItem(equipment.EquipmentSlot);
-            }
+            if (_equippedItems.ContainsKey(equipment.EquipmentSlot)) UnequipItem(equipment.EquipmentSlot);
 
             _equippedItems[equipment.EquipmentSlot] = equipment;
             UpdateStatsFromEquipment();
@@ -42,10 +35,7 @@ namespace Character.Base
         public bool UnequipItem(EquipmentSlot slot)
         {
             var removed = _equippedItems.Remove(slot);
-            if (removed)
-            {
-                UpdateStatsFromEquipment();
-            }
+            if (removed) UpdateStatsFromEquipment();
 
             return removed;
         }
@@ -64,10 +54,7 @@ namespace Character.Base
 
         private void UpdateStatsFromEquipment()
         {
-            foreach (StatType statType in System.Enum.GetValues(typeof(StatType)))
-            {
-                Stats.SetEquipmentBonus(statType, 0f);
-            }
+            foreach (StatType statType in Enum.GetValues(typeof(StatType))) Stats.SetEquipmentBonus(statType, 0f);
 
             foreach (var (_, equipment) in _equippedItems)
             {
@@ -91,10 +78,7 @@ namespace Character.Base
             var actualDamage = CalculateDamageReduction(damage);
             Stats.ModifyCurrentStat(StatType.CurrentHP, -actualDamage);
 
-            if (Stats.GetStat(StatType.CurrentHP) <= 0)
-            {
-                Die();
-            }
+            if (Stats.GetStat(StatType.CurrentHP) <= 0) Die();
         }
 
         private float CalculateDamageReduction(float damage)

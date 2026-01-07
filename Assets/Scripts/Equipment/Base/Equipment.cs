@@ -5,12 +5,6 @@ namespace Equipment.Base
 {
     public class Equipment
     {
-        public string Name { get; private set; }
-        public EquipmentType EquipmentType { get; private set; }
-        public EquipmentSlot EquipmentSlot { get; private set; }
-        public int EnhancementLevel { get; private set; }
-        public int MaxEnhancementLevel { get; private set; }
-
         private readonly Dictionary<StatType, float> _baseStats;
         private readonly Dictionary<StatType, float> _enhancementBonusPerLevel;
 
@@ -26,6 +20,12 @@ namespace Equipment.Base
             _baseStats = new Dictionary<StatType, float>();
             _enhancementBonusPerLevel = new Dictionary<StatType, float>();
         }
+
+        public string Name { get; private set; }
+        public EquipmentType EquipmentType { get; private set; }
+        public EquipmentSlot EquipmentSlot { get; private set; }
+        public int EnhancementLevel { get; private set; }
+        public int MaxEnhancementLevel { get; }
 
         public void SetBaseStat(StatType statType, float value)
         {
@@ -44,7 +44,7 @@ namespace Equipment.Base
             foreach (var (statType, baseValue) in _baseStats)
             {
                 var enhancementBonus = _enhancementBonusPerLevel.GetValueOrDefault(statType, 0f);
-                var totalValue = baseValue + (enhancementBonus * EnhancementLevel);
+                var totalValue = baseValue + enhancementBonus * EnhancementLevel;
 
                 totalStats[statType] = totalValue;
             }
@@ -59,10 +59,7 @@ namespace Equipment.Base
 
         public bool Enhance()
         {
-            if (!CanEnhance())
-            {
-                return false;
-            }
+            if (!CanEnhance()) return false;
 
             EnhancementLevel++;
             return true;
@@ -70,10 +67,7 @@ namespace Equipment.Base
 
         public bool Downgrade()
         {
-            if (EnhancementLevel <= 0)
-            {
-                return false;
-            }
+            if (EnhancementLevel <= 0) return false;
 
             EnhancementLevel--;
             return true;
@@ -84,7 +78,7 @@ namespace Equipment.Base
             var baseValue = _baseStats.GetValueOrDefault(statType, 0f);
             var enhancementBonus = _enhancementBonusPerLevel.GetValueOrDefault(statType, 0f);
 
-            return baseValue + (enhancementBonus * EnhancementLevel);
+            return baseValue + enhancementBonus * EnhancementLevel;
         }
     }
 }

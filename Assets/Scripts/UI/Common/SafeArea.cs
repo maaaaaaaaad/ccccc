@@ -4,9 +4,9 @@ namespace UI.Common
 {
     public class SafeArea : MonoBehaviour
     {
-        private RectTransform _rectTransform;
         private Rect _lastSafeArea;
         private Vector2Int _lastScreenSize;
+        private RectTransform _rectTransform;
 
         private void Awake()
         {
@@ -20,10 +20,7 @@ namespace UI.Common
 
         private void Update()
         {
-            if (HasSafeAreaChanged())
-            {
-                ApplySafeArea();
-            }
+            if (HasSafeAreaChanged()) ApplySafeArea();
         }
 
         private bool HasSafeAreaChanged()
@@ -31,15 +28,9 @@ namespace UI.Common
             var currentSafeArea = Screen.safeArea;
             var currentScreenSize = new Vector2Int(Screen.width, Screen.height);
 
-            if (currentSafeArea != _lastSafeArea)
-            {
-                return true;
-            }
+            if (currentSafeArea != _lastSafeArea) return true;
 
-            if (currentScreenSize != _lastScreenSize)
-            {
-                return true;
-            }
+            if (currentScreenSize != _lastScreenSize) return true;
 
             return false;
         }

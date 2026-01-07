@@ -10,10 +10,7 @@ namespace CameraSystem
 
         private void LateUpdate()
         {
-            if (!target)
-            {
-                return;
-            }
+            if (!target) return;
 
             FollowTarget();
         }
