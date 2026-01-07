@@ -1,6 +1,7 @@
 using Character.Base;
 using UI.HUD;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace Core
 {
@@ -58,27 +59,30 @@ namespace Core
         {
             if (playerCharacter == null) return;
 
-            if (Input.GetKeyDown(KeyCode.T))
+            var keyboard = Keyboard.current;
+            if (keyboard == null) return;
+
+            if (keyboard.tKey.wasPressedThisFrame)
             {
                 TestDamage();
             }
 
-            if (Input.GetKeyDown(KeyCode.Y))
+            if (keyboard.yKey.wasPressedThisFrame)
             {
                 TestHeal();
             }
 
-            if (Input.GetKeyDown(KeyCode.U))
+            if (keyboard.uKey.wasPressedThisFrame)
             {
                 TestUseMana();
             }
 
-            if (Input.GetKeyDown(KeyCode.I))
+            if (keyboard.iKey.wasPressedThisFrame)
             {
                 TestRestoreMana();
             }
 
-            if (Input.GetKeyDown(KeyCode.O))
+            if (keyboard.oKey.wasPressedThisFrame)
             {
                 TestGainExp();
             }

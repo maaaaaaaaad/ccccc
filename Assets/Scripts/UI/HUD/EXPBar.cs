@@ -10,81 +10,119 @@ namespace UI.HUD
     {
         [SerializeField] private Image fillImage;
         [SerializeField] private TextMeshProUGUI expText;
+        [SerializeField] private float animationSpeed = 5f;
 
         private CharacterBase _character;
+        private float _targetFillAmount;
+        private float _currentFillAmount;
+        private float _displayedEXP;
+        private float _targetEXP;
+        private float _maxEXP;
 
-        public void Initialize(CharacterBase character)
+        private void Awake()
         {
-            if (_character != null)
-            {
-                _character.Stats.OnStatChanged -= OnStatChanged;
-            }
+            if (fillImage != null) fillImage.fillAmount = 0f;
+        }
 
-            _character = character;
-
-            if (_character == null)
-            {
-                return;
-            }
-
-            _character.Stats.OnStatChanged += OnStatChanged;
-            UpdateDisplay();
+        private void Update()
+        {
+            AnimateFill();
+            AnimateText();
         }
 
         private void OnDestroy()
         {
-            if (_character != null)
-            {
-                _character.Stats.OnStatChanged -= OnStatChanged;
-            }
+            if (_character != null) _character.Stats.OnStatChanged -= OnStatChanged;
+        }
+
+        public void Initialize(CharacterBase character)
+        {
+            if (_character != null) _character.Stats.OnStatChanged -= OnStatChanged;
+
+            _character = character;
+
+            if (_character == null) return;
+
+            _character.Stats.OnStatChanged += OnStatChanged;
+            InitializeDisplay();
+        }
+
+        private void InitializeDisplay()
+        {
+            if (_character == null) return;
+
+            var currentEXP = _character.Stats.GetStat(StatType.Experience);
+            _maxEXP = _character.Stats.GetStat(StatType.MaxExperience);
+
+            _targetEXP = currentEXP;
+            _displayedEXP = 0f;
+            _targetFillAmount = _maxEXP > 0 ? currentEXP / _maxEXP : 0f;
+            _currentFillAmount = 0f;
+
+            ApplyFillAmount(_currentFillAmount);
+            ApplyText(_displayedEXP, _maxEXP);
         }
 
         private void OnStatChanged(StatType statType, float oldValue, float newValue)
         {
-            if (statType != StatType.Experience && statType != StatType.MaxExperience)
+            if (statType == StatType.MaxExperience)
             {
+                _maxEXP = newValue;
+                UpdateTargetValues();
                 return;
             }
 
-            UpdateDisplay();
+            if (statType != StatType.Experience) return;
+
+            _targetEXP = newValue;
+            UpdateTargetValues();
         }
 
-        private void UpdateDisplay()
+        private void UpdateTargetValues()
         {
-            if (_character == null)
-            {
-                return;
-            }
-
-            var currentEXP = _character.Stats.GetStat(StatType.Experience);
-            var maxEXP = _character.Stats.GetStat(StatType.MaxExperience);
-
-            UpdateFillAmount(currentEXP, maxEXP);
-            UpdateText(currentEXP, maxEXP);
+            _targetFillAmount = _maxEXP > 0 ? _targetEXP / _maxEXP : 0f;
         }
 
-        private void UpdateFillAmount(float currentEXP, float maxEXP)
+        private void AnimateFill()
         {
-            if (fillImage == null)
+            if (fillImage == null) return;
+            if (Mathf.Approximately(_currentFillAmount, _targetFillAmount)) return;
+
+            _currentFillAmount = Mathf.Lerp(_currentFillAmount, _targetFillAmount, Time.deltaTime * animationSpeed);
+
+            if (Mathf.Abs(_currentFillAmount - _targetFillAmount) < 0.001f)
             {
-                return;
+                _currentFillAmount = _targetFillAmount;
             }
 
-            if (maxEXP <= 0)
-            {
-                fillImage.fillAmount = 0f;
-                return;
-            }
-
-            fillImage.fillAmount = currentEXP / maxEXP;
+            ApplyFillAmount(_currentFillAmount);
         }
 
-        private void UpdateText(float currentEXP, float maxEXP)
+        private void AnimateText()
         {
-            if (expText == null)
+            if (expText == null) return;
+            if (Mathf.Approximately(_displayedEXP, _targetEXP)) return;
+
+            _displayedEXP = Mathf.Lerp(_displayedEXP, _targetEXP, Time.deltaTime * animationSpeed);
+
+            if (Mathf.Abs(_displayedEXP - _targetEXP) < 0.5f)
             {
-                return;
+                _displayedEXP = _targetEXP;
             }
+
+            ApplyText(_displayedEXP, _maxEXP);
+        }
+
+        private void ApplyFillAmount(float amount)
+        {
+            if (fillImage == null) return;
+
+            fillImage.fillAmount = amount;
+        }
+
+        private void ApplyText(float currentEXP, float maxEXP)
+        {
+            if (expText == null) return;
 
             var percentage = maxEXP > 0 ? (currentEXP / maxEXP) * 100f : 0f;
             expText.text = $"{Mathf.FloorToInt(currentEXP)}/{Mathf.FloorToInt(maxEXP)} ({percentage:F1}%)";

@@ -10,8 +10,20 @@ namespace UI.HUD
     {
         [SerializeField] private Image fillImage;
         [SerializeField] private TextMeshProUGUI mpText;
+        [SerializeField] private float animationSpeed = 5f;
 
         private CharacterBase _character;
+        private float _targetFillAmount;
+        private float _currentFillAmount;
+        private float _displayedMP;
+        private float _targetMP;
+        private float _maxMP;
+
+        private void Update()
+        {
+            AnimateFill();
+            AnimateText();
+        }
 
         private void OnDestroy()
         {
@@ -27,41 +39,83 @@ namespace UI.HUD
             if (_character == null) return;
 
             _character.Stats.OnStatChanged += OnStatChanged;
-            UpdateDisplay();
+            InitializeDisplay();
         }
 
-        private void OnStatChanged(StatType statType, float oldValue, float newValue)
-        {
-            if (statType != StatType.CurrentMP && statType != StatType.MaxMP) return;
-
-            UpdateDisplay();
-        }
-
-        private void UpdateDisplay()
+        private void InitializeDisplay()
         {
             if (_character == null) return;
 
             var currentMP = _character.Stats.GetStat(StatType.CurrentMP);
-            var maxMP = _character.Stats.GetStat(StatType.MaxMP);
+            _maxMP = _character.Stats.GetStat(StatType.MaxMP);
 
-            UpdateFillAmount(currentMP, maxMP);
-            UpdateText(currentMP, maxMP);
+            _targetMP = currentMP;
+            _displayedMP = currentMP;
+            _targetFillAmount = _maxMP > 0 ? currentMP / _maxMP : 0f;
+            _currentFillAmount = _targetFillAmount;
+
+            ApplyFillAmount(_currentFillAmount);
+            ApplyText(_displayedMP, _maxMP);
         }
 
-        private void UpdateFillAmount(float currentMP, float maxMP)
+        private void OnStatChanged(StatType statType, float oldValue, float newValue)
         {
-            if (fillImage == null) return;
-
-            if (maxMP <= 0)
+            if (statType == StatType.MaxMP)
             {
-                fillImage.fillAmount = 0f;
+                _maxMP = newValue;
+                UpdateTargetValues();
                 return;
             }
 
-            fillImage.fillAmount = currentMP / maxMP;
+            if (statType != StatType.CurrentMP) return;
+
+            _targetMP = newValue;
+            UpdateTargetValues();
         }
 
-        private void UpdateText(float currentMP, float maxMP)
+        private void UpdateTargetValues()
+        {
+            _targetFillAmount = _maxMP > 0 ? _targetMP / _maxMP : 0f;
+        }
+
+        private void AnimateFill()
+        {
+            if (fillImage == null) return;
+            if (Mathf.Approximately(_currentFillAmount, _targetFillAmount)) return;
+
+            _currentFillAmount = Mathf.Lerp(_currentFillAmount, _targetFillAmount, Time.deltaTime * animationSpeed);
+
+            if (Mathf.Abs(_currentFillAmount - _targetFillAmount) < 0.001f)
+            {
+                _currentFillAmount = _targetFillAmount;
+            }
+
+            ApplyFillAmount(_currentFillAmount);
+        }
+
+        private void AnimateText()
+        {
+            if (mpText == null) return;
+            if (Mathf.Approximately(_displayedMP, _targetMP)) return;
+
+            _displayedMP = Mathf.Lerp(_displayedMP, _targetMP, Time.deltaTime * animationSpeed);
+
+            if (Mathf.Abs(_displayedMP - _targetMP) < 0.5f)
+            {
+                _displayedMP = _targetMP;
+            }
+
+            ApplyText(_displayedMP, _maxMP);
+        }
+
+        private void ApplyFillAmount(float amount)
+        {
+            if (fillImage == null) return;
+
+            fillImage.fillAmount = amount;
+        }
+
+        private void ApplyText(float currentMP, float maxMP)
         {
             if (mpText == null) return;
 
